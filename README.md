@@ -4,7 +4,7 @@ Selamat datang di repositori SkinSight. Proyek ini mendemonstrasikan kemampuan a
 
 ---
 
-## 🎯 Fokus Demo
+## Fokus Demo
 
 Demo ini bertujuan untuk menampilkan alur autentikasi biometrik yang mulus, mencakup:
 1.  **Deteksi Liveness (Kehidupan) Nyata**: Memastikan pengguna adalah manusia asli, bukan foto atau video.
@@ -13,7 +13,7 @@ Demo ini bertujuan untuk menampilkan alur autentikasi biometrik yang mulus, menc
 
 ---
 
-## 📸 Galeri Demo
+## Galeri Demo
 
 *(Bagian ini disediakan untuk screenshot demo aplikasi. Silakan tambahkan gambar di bawah ini)*
 
@@ -28,7 +28,7 @@ Demo ini bertujuan untuk menampilkan alur autentikasi biometrik yang mulus, menc
 
 ---
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
 -   **Liveness Detection**: Menggunakan algoritma state-of-the-art untuk mencegah spoofing (pemalsuan wajah).
 -   **User Experience yang Intuitif**: Panduan visual real-time membantu pengguna memposisikan wajah dengan benar.
@@ -36,7 +36,7 @@ Demo ini bertujuan untuk menampilkan alur autentikasi biometrik yang mulus, menc
 
 ---
 
-## 🛠️ Teknologi
+## Teknologi
 
 Proyek ini dibangun menggunakan teknologi modern:
 -   **Frontend**: React.js, Tailwind CSS
@@ -45,7 +45,7 @@ Proyek ini dibangun menggunakan teknologi modern:
 
 ---
 
-## 💻 Cara Menjalankan
+## Cara Menjalankan
 
 Untuk menjalan demo ini di lingkungan lokal Anda:
 
