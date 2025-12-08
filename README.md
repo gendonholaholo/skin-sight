@@ -47,7 +47,7 @@ Proyek ini berfungsi sebagai demonstrasi antarmuka pengguna premium untuk diagno
 
 ## Roadmap & Backlog
 
-### Implemented (v1.0.0)
+### Implemented (v2.1.0)
 *   [x] Implementasi UI/UX Dasar (Desain Mewah Klinis)
 *   [x] **Real API Integration**: Integrasi YouCam API v2.0 untuk skin analysis
     - ZIP extraction untuk score_info.json
