@@ -230,7 +230,7 @@ export default function Dashboard() {
 
                             {/* Primary Metrics */}
                             <div className="mb-8">
-                                <h3 className="text-lg font-bold mb-4 text-zinc-300">📊 Primary Metrics</h3>
+                                <h3 className="text-lg font-bold mb-4 text-zinc-300">Primary Metrics</h3>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     <MetricCard
                                         title="Acne"
@@ -293,7 +293,7 @@ export default function Dashboard() {
 
                             {/* Aging Signs */}
                             <div className="mb-8">
-                                <h3 className="text-lg font-bold mb-4 text-zinc-300">👵 Aging Signs</h3>
+                                <h3 className="text-lg font-bold mb-4 text-zinc-300">Aging Signs</h3>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     <MetricCard
                                         title="Age Spots"
@@ -335,7 +335,7 @@ export default function Dashboard() {
 
                             {/* Skin Condition */}
                             <div className="mb-8">
-                                <h3 className="text-lg font-bold mb-4 text-zinc-300">💧 Skin Condition</h3>
+                                <h3 className="text-lg font-bold mb-4 text-zinc-300">Skin Condition</h3>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-4">
                                     <MetricCard
                                         title="Oiliness"

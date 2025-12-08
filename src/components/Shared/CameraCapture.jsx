@@ -17,8 +17,14 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
     const [isInitializing, setIsInitializing] = useState(true);
     const detectFacesRef = useRef(null);
 
-    // Real-time face detection loop
+    // Real-time face detection loop (DISABLED when autoCapture is true)
     useEffect(() => {
+        // Skip face detection entirely when in auto-capture mode (registration flow)
+        if (autoCapture) {
+            setIsInitializing(false);
+            return;
+        }
+
         const detectFaces = () => {
             const video = webcamRef.current?.video;
             const canvas = canvasRef.current;
@@ -90,10 +96,16 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, []);
+    }, [autoCapture]);
 
-    // Initialize MediaPipe Face Detector
+    // Initialize MediaPipe Face Detector (DISABLED when autoCapture is true)
     useEffect(() => {
+        // Skip detector initialization in auto-capture mode (registration flow)
+        if (autoCapture) {
+            setIsInitializing(false);
+            return;
+        }
+
         let mounted = true;
 
         async function initDetector() {
@@ -132,7 +144,7 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, []);
+    }, [autoCapture]);
 
     const capture = useCallback(() => {
         if (!faceStatus.isValid && !autoCapture) {

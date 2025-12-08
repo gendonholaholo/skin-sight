@@ -10,6 +10,14 @@ export default defineConfig({
     strictPort: false,
     hmr: {
       clientPort: 443,
+    },
+    proxy: {
+      '/api/perfectcorp': {
+        target: 'https://yce-api-01.makeupar.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/perfectcorp/, ''),
+        secure: true,
+      }
     }
   }
 })

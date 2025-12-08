@@ -1,4 +1,5 @@
 const API_KEY = import.meta.env.VITE_PERFECT_CORP_API_KEY;
+const SECRET_KEY = import.meta.env.VITE_PERFECT_CORP_SECRET_KEY;
 
 // Image size requirements from API docs
 const HD_MIN_SHORT_SIDE = 1080;
