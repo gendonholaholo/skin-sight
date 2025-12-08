@@ -11,7 +11,8 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
     const [faceStatus, setFaceStatus] = useState({
         detected: false,
         widthPercent: 0,
-        isValid: false
+        isValid: false,
+        outOfBounds: false
     });
     const [isInitializing, setIsInitializing] = useState(true);
 
@@ -81,15 +82,26 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                     const faceWidth = bbox.width;
                     const imageWidth = canvas.width;
                     const widthPercent = (faceWidth / imageWidth) * 100;
-                    const isValid = widthPercent >= 60;
+
+                    // Check if face is within frame bounds (not cut off)
+                    const margin = 10; // Allow small margin for floating point errors
+                    const isWithinBounds =
+                        bbox.originX >= -margin &&
+                        bbox.originY >= -margin &&
+                        bbox.originX + bbox.width <= canvas.width + margin &&
+                        bbox.originY + bbox.height <= canvas.height + margin;
+
+                    // Face is valid if: width >= 60% AND within bounds
+                    const isValid = widthPercent >= 60 && isWithinBounds;
 
                     setFaceStatus({
                         detected: true,
                         widthPercent,
-                        isValid
+                        isValid,
+                        outOfBounds: !isWithinBounds
                     });
 
-                    // Draw bounding box
+                    // Draw bounding box - color based on validity
                     ctx.strokeStyle = isValid ? '#22c55e' : '#ef4444';
                     ctx.lineWidth = 4;
                     ctx.strokeRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
@@ -99,7 +111,7 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                     ctx.fillRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
 
                 } else {
-                    setFaceStatus({ detected: false, widthPercent: 0, isValid: false });
+                    setFaceStatus({ detected: false, widthPercent: 0, isValid: false, outOfBounds: false });
                 }
             } catch (error) {
                 console.error("Detection error:", error);
@@ -111,7 +123,11 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
 
     const capture = useCallback(() => {
         if (!faceStatus.isValid && !autoCapture) {
-            alert("Please move closer to the camera! Your face should fill at least 60% of the frame.");
+            if (faceStatus.outOfBounds) {
+                alert("Please move back from the camera! Your face is too close and extends beyond the frame.");
+            } else {
+                alert("Please move closer to the camera! Your face should fill at least 60% of the frame.");
+            }
             return;
         }
 
@@ -119,7 +135,7 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
         if (imageSrc) {
             onCapture(imageSrc);
         }
-    }, [faceStatus.isValid, onCapture, autoCapture]);
+    }, [faceStatus, onCapture, autoCapture]);
 
     // Auto-capture hook (with face validation disabled for auto mode)
     useEffect(() => {
@@ -164,6 +180,11 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                                 <span className="text-lg">✓</span>
                                 Ready to capture ({faceStatus.widthPercent.toFixed(0)}%)
                             </div>
+                        ) : faceStatus.outOfBounds ? (
+                            <div className="bg-orange-500/90 text-white px-4 py-2 rounded-full font-medium shadow-lg backdrop-blur-sm flex items-center gap-2">
+                                <span className="text-lg">⚠</span>
+                                Move back - face is cut off
+                            </div>
                         ) : (
                             <div className="bg-red-500/90 text-white px-4 py-2 rounded-full font-medium shadow-lg backdrop-blur-sm flex items-center gap-2">
                                 <span className="text-lg">⚠</span>
@@ -192,13 +213,13 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                     onClick={capture}
                     disabled={!faceStatus.isValid && !autoCapture && !isInitializing}
                     className={`w-20 h-20 rounded-full border-4 border-white flex items-center justify-center transition-all ${(!faceStatus.isValid && !autoCapture && !isInitializing)
-                            ? 'opacity-50 cursor-not-allowed'
-                            : 'hover:scale-105 group'
+                        ? 'opacity-50 cursor-not-allowed'
+                        : 'hover:scale-105 group'
                         }`}
                 >
                     <div className={`w-16 h-16 rounded-full transition-colors ${(faceStatus.isValid || autoCapture || isInitializing)
-                            ? 'bg-white group-hover:bg-pink-100'
-                            : 'bg-gray-400'
+                        ? 'bg-white group-hover:bg-pink-100'
+                        : 'bg-gray-400'
                         }`} />
                 </button>
             </div>
