@@ -17,6 +17,9 @@ Demo ini bertujuan untuk menampilkan alur autentikasi biometrik yang mulus, menc
 
 *(Bagian ini disediakan untuk screenshot demo aplikasi. Silakan tambahkan gambar di bawah ini)*
 
+**🎥 Video Demo Lengkap**
+[Tonton Demo / Download Video di Google Drive](https://drive.google.com/drive/folders/1J42N0VNlSgB_jOQ6mPNpB_-adhDfnN81?usp=drive_link)
+
 **1. Halaman Utama & Login**
 <div align="center">
   <img src="assets/landing-page.jpeg" width="45%" alt="Halaman Utama" />
