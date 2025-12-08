@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CameraCapture from "../Shared/CameraCapture";
 import MetricCard from "./MetricCard";
 import Navbar from "../Shared/Navbar";
 import { facePlusPlusService } from "../../services/api/faceplusplus";
 import { youCamService } from "../../services/api/youcam";
 import { Activity, Droplets, Sun, User, ScanFace, Plus, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const VIEWS = {
     HISTORY: "history",
@@ -17,19 +17,18 @@ const VIEWS = {
 export default function Dashboard() {
     const [view, setView] = useState(VIEWS.HISTORY);
     const [results, setResults] = useState(null);
-    const [history, setHistory] = useState([]);
-
-    // Load history on mount
-    useEffect(() => {
+    const [history, setHistory] = useState(() => {
         const savedHistory = localStorage.getItem("user_scan_history");
         if (savedHistory) {
             try {
-                setHistory(JSON.parse(savedHistory));
+                return JSON.parse(savedHistory);
             } catch (e) {
                 console.error("Failed to parse history", e);
+                return [];
             }
         }
-    }, []);
+        return [];
+    });
 
     const saveToHistory = (newResult) => {
         const record = {
@@ -52,8 +51,8 @@ export default function Dashboard() {
             // Real parallel request simulation
             // In dev without keys, we might need robust fallbacks or mocks directly here if services fail
             const [skinData, faceData] = await Promise.all([
-                youCamService.analyzeSkin(base64Data).catch(e => ({ acne: { score: 85, level: "Low" }, wrinkles: { score: 92, level: "None" }, texture: { score: 78, level: "Good" }, hydration: { score: 65, level: "Moderate" } })),
-                facePlusPlusService.detectFace(base64Data).catch(e => ({ faces: [{ attributes: { age: { value: 25 }, gender: { value: "Female" } } }] }))
+                youCamService.analyzeSkin(base64Data),
+                facePlusPlusService.detectFace(base64Data)
             ]);
 
             // Normalize Face Data
@@ -69,7 +68,26 @@ export default function Dashboard() {
             setView(VIEWS.RESULTS);
         } catch (error) {
             console.error("Analysis Failed", error);
-            alert("Analysis failed. Please try again.");
+
+            // Parse API error messages for user-friendly feedback
+            let userMessage = "Analysis failed. Please try again.";
+            const errorMsg = error.message || "";
+
+            if (errorMsg.includes('face_too_small') || errorMsg.includes('error_src_face_too_small')) {
+                userMessage = "⚠️ Face Too Small\n\nYour face is too small in the photo. Please move closer to the camera and ensure your face fills at least 60% of the frame.";
+            } else if (errorMsg.includes('face_out_of_bound') || errorMsg.includes('error_src_face_out_of_bound')) {
+                userMessage = "⚠️ Face Out of Bounds\n\nPlease center your face in the frame and try again.";
+            } else if (errorMsg.includes('lighting_dark') || errorMsg.includes('error_lighting_dark')) {
+                userMessage = "⚠️ Too Dark\n\nThe lighting is too dark. Please move to a well-lit area and try again.";
+            } else if (errorMsg.includes('below_min_image_size') || errorMsg.includes('error_below_min_image_size')) {
+                userMessage = "⚠️ Image Too Small\n\nThe image resolution is too low. Please ensure good camera quality.";
+            } else if (errorMsg.includes('exceed_max_image_size') || errorMsg.includes('error_exceed_max_image_size')) {
+                userMessage = "⚠️ Image Too Large\n\nThe image resolution is too high. This should not happen, please report this issue.";
+            } else if (errorMsg.includes('Missing Credentials') || errorMsg.includes('API')) {
+                userMessage = "⚠️ Service Error\n\nThere was a problem connecting to the analysis service. Please try again later.";
+            }
+
+            alert(userMessage);
             setView(VIEWS.HISTORY);
         }
     };

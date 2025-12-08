@@ -1,21 +1,130 @@
-import { useRef, useCallback, useEffect } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
 import Webcam from "react-webcam";
+import { FaceDetector, FilesetResolver } from "@mediapipe/tasks-vision";
 
 export default function CameraCapture({ onCapture, autoCapture = false }) {
     const webcamRef = useRef(null);
+    const canvasRef = useRef(null);
+    const detectorRef = useRef(null);
+    const animationRef = useRef(null);
+
+    const [faceStatus, setFaceStatus] = useState({
+        detected: false,
+        widthPercent: 0,
+        isValid: false
+    });
+    const [isInitializing, setIsInitializing] = useState(true);
+
+    // Initialize MediaPipe Face Detector
+    useEffect(() => {
+        let mounted = true;
+
+        async function initDetector() {
+            try {
+                const vision = await FilesetResolver.forVisionTasks(
+                    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+                );
+
+                const detector = await FaceDetector.createFromOptions(vision, {
+                    baseOptions: {
+                        modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
+                        delegate: "GPU"
+                    },
+                    runningMode: "VIDEO",
+                    minDetectionConfidence: 0.5
+                });
+
+                if (mounted) {
+                    detectorRef.current = detector;
+                    setIsInitializing(false);
+                    detectFaces(); // Start detection loop
+                }
+            } catch (error) {
+                console.error("Failed to initialize face detector:", error);
+                setIsInitializing(false);
+            }
+        }
+
+        initDetector();
+
+        return () => {
+            mounted = false;
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+            }
+        };
+    }, []);
+
+    // Real-time face detection loop
+    const detectFaces = useCallback(() => {
+        const video = webcamRef.current?.video;
+        const canvas = canvasRef.current;
+
+        if (video && canvas && detectorRef.current && video.readyState === 4) {
+            try {
+                const ctx = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                // Run detection
+                const startTime = performance.now();
+                const results = detectorRef.current.detectForVideo(video, startTime);
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (results.detections?.length > 0) {
+                    // Use first detected face
+                    const face = results.detections[0];
+                    const bbox = face.boundingBox;
+
+                    // Calculate face width percentage
+                    const faceWidth = bbox.width;
+                    const imageWidth = canvas.width;
+                    const widthPercent = (faceWidth / imageWidth) * 100;
+                    const isValid = widthPercent >= 60;
+
+                    setFaceStatus({
+                        detected: true,
+                        widthPercent,
+                        isValid
+                    });
+
+                    // Draw bounding box
+                    ctx.strokeStyle = isValid ? '#22c55e' : '#ef4444';
+                    ctx.lineWidth = 4;
+                    ctx.strokeRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
+
+                    // Draw semi-transparent fill
+                    ctx.fillStyle = isValid ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                    ctx.fillRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
+
+                } else {
+                    setFaceStatus({ detected: false, widthPercent: 0, isValid: false });
+                }
+            } catch (error) {
+                console.error("Detection error:", error);
+            }
+        }
+
+        animationRef.current = requestAnimationFrame(detectFaces);
+    }, []);
 
     const capture = useCallback(() => {
+        if (!faceStatus.isValid && !autoCapture) {
+            alert("Please move closer to the camera! Your face should fill at least 60% of the frame.");
+            return;
+        }
+
         const imageSrc = webcamRef.current.getScreenshot();
         if (imageSrc) {
             onCapture(imageSrc);
         }
-    }, [webcamRef, onCapture]);
+    }, [faceStatus.isValid, onCapture, autoCapture]);
 
-    // Auto-capture hook
+    // Auto-capture hook (with face validation disabled for auto mode)
     useEffect(() => {
         let timeout;
         if (autoCapture) {
-            // Give a brief moment for camera to initialize/stabilize if needed
             timeout = setTimeout(() => {
                 if (webcamRef.current) {
                     capture();
@@ -31,7 +140,7 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
-                mirrored={true} // Force mirror mode
+                mirrored={true}
                 videoConstraints={{
                     facingMode: "user",
                     width: 720,
@@ -40,12 +149,57 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                 className="w-full h-full object-cover"
             />
 
+            {/* Detection overlay canvas */}
+            <canvas
+                ref={canvasRef}
+                className="absolute inset-0 w-full h-full pointer-events-none"
+            />
+
+            {/* Status indicator */}
+            {!isInitializing && !autoCapture && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+                    {faceStatus.detected ? (
+                        faceStatus.isValid ? (
+                            <div className="bg-green-500/90 text-white px-4 py-2 rounded-full font-medium shadow-lg backdrop-blur-sm flex items-center gap-2">
+                                <span className="text-lg">✓</span>
+                                Ready to capture ({faceStatus.widthPercent.toFixed(0)}%)
+                            </div>
+                        ) : (
+                            <div className="bg-red-500/90 text-white px-4 py-2 rounded-full font-medium shadow-lg backdrop-blur-sm flex items-center gap-2">
+                                <span className="text-lg">⚠</span>
+                                Move closer ({faceStatus.widthPercent.toFixed(0)}% - need 60%)
+                            </div>
+                        )
+                    ) : (
+                        <div className="bg-yellow-500/90 text-white px-4 py-2 rounded-full font-medium shadow-lg backdrop-blur-sm flex items-center gap-2 animate-pulse">
+                            <span className="text-lg">🔍</span>
+                            Detecting face...
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {isInitializing && !autoCapture && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+                    <div className="bg-blue-500/90 text-white px-4 py-2 rounded-full font-medium shadow-lg backdrop-blur-sm animate-pulse">
+                        Loading face detector...
+                    </div>
+                </div>
+            )}
+
             <div className="absolute inset-x-0 bottom-0 p-8 flex justify-center bg-gradient-to-t from-black/80 to-transparent">
                 <button
                     onClick={capture}
-                    className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center hover:scale-105 transition-transform group"
+                    disabled={!faceStatus.isValid && !autoCapture && !isInitializing}
+                    className={`w-20 h-20 rounded-full border-4 border-white flex items-center justify-center transition-all ${(!faceStatus.isValid && !autoCapture && !isInitializing)
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:scale-105 group'
+                        }`}
                 >
-                    <div className="w-16 h-16 rounded-full bg-white group-hover:bg-pink-100 transition-colors" />
+                    <div className={`w-16 h-16 rounded-full transition-colors ${(faceStatus.isValid || autoCapture || isInitializing)
+                            ? 'bg-white group-hover:bg-pink-100'
+                            : 'bg-gray-400'
+                        }`} />
                 </button>
             </div>
 
