@@ -15,6 +15,7 @@
     "autoprefixer": "^10.4.22",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.25",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.556.0",
     "postcss": "^8.5.6",
     "react": "^19.2.0",
