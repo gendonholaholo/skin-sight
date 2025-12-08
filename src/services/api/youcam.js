@@ -25,7 +25,6 @@ async function resizeImageForAPI(base64Image, isHD = false) {
             let width = img.width;
             let height = img.height;
             const shortSide = Math.min(width, height);
-            const longSide = Math.max(width, height);
 
             // Calculate scale factor
             let scale = 1;

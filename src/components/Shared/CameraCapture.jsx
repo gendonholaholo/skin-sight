@@ -15,6 +15,82 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
         outOfBounds: false
     });
     const [isInitializing, setIsInitializing] = useState(true);
+    const detectFacesRef = useRef(null);
+
+    // Real-time face detection loop
+    useEffect(() => {
+        const detectFaces = () => {
+            const video = webcamRef.current?.video;
+            const canvas = canvasRef.current;
+
+            if (video && canvas && detectorRef.current && video.readyState === 4) {
+                try {
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+
+                    // Run detection
+                    const startTime = performance.now();
+                    const results = detectorRef.current.detectForVideo(video, startTime);
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    if (results.detections?.length > 0) {
+                        // Use first detected face
+                        const face = results.detections[0];
+                        const bbox = face.boundingBox;
+
+                        // Calculate face width percentage
+                        const faceWidth = bbox.width;
+                        const imageWidth = canvas.width;
+                        const widthPercent = (faceWidth / imageWidth) * 100;
+
+                        // Check if face is within frame bounds (not cut off)
+                        const margin = 10; // Allow small margin for floating point errors
+                        const isWithinBounds =
+                            bbox.originX >= -margin &&
+                            bbox.originY >= -margin &&
+                            bbox.originX + bbox.width <= canvas.width + margin &&
+                            bbox.originY + bbox.height <= canvas.height + margin;
+
+                        // Face is valid if: width >= 60% AND within bounds
+                        const isValid = widthPercent >= 60 && isWithinBounds;
+
+                        setFaceStatus({
+                            detected: true,
+                            widthPercent,
+                            isValid,
+                            outOfBounds: !isWithinBounds
+                        });
+
+                        // Draw bounding box - color based on validity
+                        ctx.strokeStyle = isValid ? '#22c55e' : '#ef4444';
+                        ctx.lineWidth = 4;
+                        ctx.strokeRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
+
+                        // Draw semi-transparent fill
+                        ctx.fillStyle = isValid ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                        ctx.fillRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
+
+                    } else {
+                        setFaceStatus({ detected: false, widthPercent: 0, isValid: false, outOfBounds: false });
+                    }
+                } catch (error) {
+                    console.error("Detection error:", error);
+                }
+            }
+
+            animationRef.current = requestAnimationFrame(detectFacesRef.current);
+        };
+
+        detectFacesRef.current = detectFaces;
+
+        return () => {
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+            }
+        };
+    }, []);
 
     // Initialize MediaPipe Face Detector
     useEffect(() => {
@@ -38,7 +114,9 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                 if (mounted) {
                     detectorRef.current = detector;
                     setIsInitializing(false);
-                    detectFaces(); // Start detection loop
+                    if (detectFacesRef.current) {
+                        detectFacesRef.current(); // Start detection loop
+                    }
                 }
             } catch (error) {
                 console.error("Failed to initialize face detector:", error);
@@ -54,71 +132,6 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, []);
-
-    // Real-time face detection loop
-    const detectFaces = useCallback(() => {
-        const video = webcamRef.current?.video;
-        const canvas = canvasRef.current;
-
-        if (video && canvas && detectorRef.current && video.readyState === 4) {
-            try {
-                const ctx = canvas.getContext('2d');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-
-                // Run detection
-                const startTime = performance.now();
-                const results = detectorRef.current.detectForVideo(video, startTime);
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                if (results.detections?.length > 0) {
-                    // Use first detected face
-                    const face = results.detections[0];
-                    const bbox = face.boundingBox;
-
-                    // Calculate face width percentage
-                    const faceWidth = bbox.width;
-                    const imageWidth = canvas.width;
-                    const widthPercent = (faceWidth / imageWidth) * 100;
-
-                    // Check if face is within frame bounds (not cut off)
-                    const margin = 10; // Allow small margin for floating point errors
-                    const isWithinBounds =
-                        bbox.originX >= -margin &&
-                        bbox.originY >= -margin &&
-                        bbox.originX + bbox.width <= canvas.width + margin &&
-                        bbox.originY + bbox.height <= canvas.height + margin;
-
-                    // Face is valid if: width >= 60% AND within bounds
-                    const isValid = widthPercent >= 60 && isWithinBounds;
-
-                    setFaceStatus({
-                        detected: true,
-                        widthPercent,
-                        isValid,
-                        outOfBounds: !isWithinBounds
-                    });
-
-                    // Draw bounding box - color based on validity
-                    ctx.strokeStyle = isValid ? '#22c55e' : '#ef4444';
-                    ctx.lineWidth = 4;
-                    ctx.strokeRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
-
-                    // Draw semi-transparent fill
-                    ctx.fillStyle = isValid ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
-                    ctx.fillRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
-
-                } else {
-                    setFaceStatus({ detected: false, widthPercent: 0, isValid: false, outOfBounds: false });
-                }
-            } catch (error) {
-                console.error("Detection error:", error);
-            }
-        }
-
-        animationRef.current = requestAnimationFrame(detectFaces);
     }, []);
 
     const capture = useCallback(() => {
