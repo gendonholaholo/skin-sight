@@ -30,6 +30,7 @@ Demo ini bertujuan untuk menampilkan alur autentikasi biometrik yang mulus, menc
 
 ## Fitur Utama
 
+-   **Analisis Kulit & Wajah Tingkat Klinis**: Sistem kami terintegrasi dengan mesin pemroses citra berbasis AI standar industri yang digunakan oleh brand kecantikan global ternama. Teknologi ini telah terkalibrasi secara dermatologis untuk memberikan penilaian kondisi kulit (seperti tekstur, noda, dan kerutan) yang sangat akurat dan objektif, setara dengan konsultasi profesional.
 -   **Liveness Detection**: Menggunakan algoritma state-of-the-art untuk mencegah spoofing (pemalsuan wajah).
 -   **User Experience yang Intuitif**: Panduan visual real-time membantu pengguna memposisikan wajah dengan benar.
 -   **Performa Tinggi**: Dioptimalkan untuk berjalan lancar di berbagai perangkat dengan latensi rendah.
