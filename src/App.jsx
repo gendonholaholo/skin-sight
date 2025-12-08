@@ -1,5 +1,6 @@
 import Navbar from "./components/Shared/Navbar";
 import Hero from "./components/Landing/Hero";
+import About from "./components/Landing/About";
 import Features from "./components/Landing/Features";
 import AuthScreen from "./components/Auth/AuthScreen";
 import Dashboard from "./components/Dashboard/Dashboard";
@@ -12,6 +13,7 @@ function Landing() {
       <main>
         <Hero />
         <Features />
+        <About />
       </main>
     </div>
   );

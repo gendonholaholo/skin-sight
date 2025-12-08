@@ -37,14 +37,15 @@ export default function Hero() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <motion.button
+                        <motion.a
+                            href="/auth"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             className="px-8 py-4 bg-gradient-to-r from-pink-600 to-indigo-600 rounded-xl font-bold text-white shadow-lg shadow-pink-500/25 flex items-center justify-center gap-2 group"
                         >
                             Start Free Scan
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </motion.button>
+                        </motion.a>
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}

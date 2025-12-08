@@ -1,33 +1,58 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
-import { Camera, RefreshCw } from "lucide-react";
 
-export default function CameraCapture({ onCapture }) {
+export default function CameraCapture({ onCapture, autoCapture = false }) {
     const webcamRef = useRef(null);
 
     const capture = useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
-        onCapture(imageSrc);
+        if (imageSrc) {
+            onCapture(imageSrc);
+        }
     }, [webcamRef, onCapture]);
 
+    // Auto-capture hook
+    useEffect(() => {
+        let timeout;
+        if (autoCapture) {
+            // Give a brief moment for camera to initialize/stabilize if needed
+            timeout = setTimeout(() => {
+                if (webcamRef.current) {
+                    capture();
+                }
+            }, 800);
+        }
+        return () => clearTimeout(timeout);
+    }, [autoCapture, capture]);
+
     return (
-        <div className="relative w-full max-w-lg mx-auto aspect-[3/4] bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+        <div className="relative w-full max-w-md mx-auto aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/10">
             <Webcam
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
-                videoConstraints={{ facingMode: "user" }}
-                className="absolute inset-0 w-full h-full object-cover transform -scale-x-100"
+                videoConstraints={{
+                    facingMode: "user",
+                    width: 720,
+                    height: 960
+                }}
+                className="w-full h-full object-cover"
             />
 
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+            <div className="absolute inset-x-0 bottom-0 p-8 flex justify-center bg-gradient-to-t from-black/80 to-transparent">
                 <button
                     onClick={capture}
-                    className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform active:scale-95"
+                    className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center hover:scale-105 transition-transform group"
                 >
-                    <div className="w-14 h-14 border-2 border-black rounded-full" />
+                    <div className="w-16 h-16 rounded-full bg-white group-hover:bg-pink-100 transition-colors" />
                 </button>
             </div>
+
+            {autoCapture && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 pointer-events-none">
+                    <p className="text-white font-bold animate-pulse">Auto-capturing...</p>
+                </div>
+            )}
         </div>
     );
 }

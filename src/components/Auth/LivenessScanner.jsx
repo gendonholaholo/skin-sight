@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ScanFace, CheckCircle, AlertCircle, Smile, Eye } from "lucide-react";
+import { ScanFace, CheckCircle, Smile, Eye } from "lucide-react";
 import { mediaPipeService } from "../../services/mediapipeService";
 import clsx from "clsx";
 
@@ -37,7 +37,7 @@ const CHALLENGES = [
     },
 ];
 
-export default function LivenessScanner({ onComplete }) {
+export default function LivenessScanner({ onBack, onSuccess }) {
     const videoRef = useRef(null);
     const [status, setStatus] = useState(STATES.LOADING);
     const [message, setMessage] = useState("Initializing Camera...");
@@ -233,7 +233,7 @@ export default function LivenessScanner({ onComplete }) {
                 if (elapsed > 1000) {
                     setStatus(STATES.SUCCESS);
                     setMessage("Identity Verified!");
-                    setTimeout(() => onComplete && onComplete(), 1000);
+                    setTimeout(() => onSuccess && onSuccess(), 1000);
                 }
             } else {
                 // Failed to hold

@@ -26,5 +26,29 @@ export const facePlusPlusService = {
             console.error("Face++ Error:", error);
             throw error;
         }
+    },
+
+    compare: async (faceToken1, imageBase64_2) => {
+        if (!API_KEY || !API_SECRET) {
+            return { error: "Missing Credentials" };
+        }
+
+        const formData = new FormData();
+        formData.append("api_key", API_KEY);
+        formData.append("api_secret", API_SECRET);
+        formData.append("face_token1", faceToken1);
+        formData.append("image_base64_2", imageBase64_2);
+
+        try {
+            const response = await fetch("https://api-us.faceplusplus.com/facepp/v3/compare", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Face++ Compare Error:", error);
+            throw error;
+        }
     }
 };
