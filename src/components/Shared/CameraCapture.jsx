@@ -31,6 +31,7 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
+                mirrored={true} // Force mirror mode
                 videoConstraints={{
                     facingMode: "user",
                     width: 720,

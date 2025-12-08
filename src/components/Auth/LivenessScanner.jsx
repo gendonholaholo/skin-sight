@@ -259,7 +259,8 @@ export default function LivenessScanner({ onBack, onSuccess }) {
                 autoPlay
                 playsInline
                 muted // CRITICAL for autoplay
-                className="absolute inset-0 w-full h-full object-cover transform -scale-x-100"
+                style={{ transform: "scaleX(-1)" }} // Standard mirror transform
+                className="absolute inset-0 w-full h-full object-cover"
             />
 
             {/* Overlay UI */}
