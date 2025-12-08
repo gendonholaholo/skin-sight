@@ -45,30 +45,41 @@ Proyek ini berfungsi sebagai demonstrasi antarmuka pengguna premium untuk diagno
 
 ---
 
-## Peta Jalan & Backlog
+## Roadmap & Backlog
 
-### ✅ Fase 1: Proof of Concept (Selesai)
-*   [x] Implementasi UI/UX Dasar (Desain Mewah Klinis).
-*   [x] **Real API Integration**: Integrasi YouCam API v2.0 untuk skin analysis.
-*   [x] **Face Detection Preview**: MediaPipe untuk validasi real-time sebelum capture.
-*   [x] **Complete Data Display**: Menampilkan 100% metrics dari API (15+ data points).
-*   [x] Login Biometrik (Deteksi & Bandingkan).
-*   [x] Pemeriksaan Liveness Variabel (Anti-spoofing).
-*   [x] Pembuatan Laporan PDF.
-*   [x] Sistem Pencatatan (Logging) Komprehensif.
+### Implemented (v1.0.0)
+*   [x] Implementasi UI/UX Dasar (Desain Mewah Klinis)
+*   [x] **Real API Integration**: Integrasi YouCam API v2.0 untuk skin analysis
+    - ZIP extraction untuk score_info.json
+    - Support HD mode (2560x1080) dan SD mode (1920x480)
+    - Error handling untuk berbagai kondisi API
+*   [x] **Face Detection & Validation**: MediaPipe BlazeFace untuk validasi pre-capture
+    - Real-time face size validation (minimum 60% width)
+    - Bounds checking untuk mencegah face cutoff
+    - Visual feedback dengan color-coded borders
+*   [x] **Complete Data Display**: Menampilkan 100% metrics dari API
+    - Primary metrics: acne, wrinkles, texture, hydration, pores, radiance, firmness, redness
+    - Aging signs: age spots, eye bags, dark circles, droopy eyelids
+    - Skin condition: oiliness
+    - Overall score dan estimated skin age
+*   [x] Login Biometrik dengan Face++ API (Deteksi & Bandingkan)
+*   [x] Pemeriksaan Liveness dengan MediaPipe Face Mesh (Challenge-Response)
+*   [x] Pembuatan Laporan PDF
+*   [x] Sistem Pencatatan (Logging) Komprehensif
 
-### 🚀 Fase 2: Enhancement Features (Backlog)
-*   [ ] **Lighting Detection** - Deteksi kondisi pencahayaan (terlalu gelap/terang) dengan warning real-time.
-*   [ ] **Face Centering Guide** - Overlay oval virtual untuk membantu posisi wajah optimal.
-*   [ ] **Optimal Distance Indicator** - Visual zone markers untuk jarak ideal dari kamera.
-*   [ ] **Screenshot Export** - Fitur save & download gambar diagnosis dengan overlays.
-*   [ ] **Progress History** - Track & compare skin scores over time dengan grafik trend.
+### Planned Enhancements
+*   [ ] **Lighting Detection** - Deteksi kondisi pencahayaan (terlalu gelap/terang) dengan warning real-time
+*   [ ] **Face Centering Guide** - Overlay oval virtual untuk membantu posisi wajah optimal
+*   [ ] **Optimal Distance Indicator** - Visual zone markers untuk jarak ideal dari kamera
+*   [ ] **Screenshot Export** - Fitur save & download gambar diagnosis dengan overlays
+*   [ ] **Progress History** - Track & compare skin scores over time dengan grafik trend
 
-### 📊 Fase 3: Siap Produksi
-*   **Desain Database (ERD)**: Merancang skema yang dapat diskalakan untuk menangani profil pengguna, log riwayat, dan tren analisis.
-*   **Arsitektur Skalabel**: Merancang ulang backend untuk mendukung 1000 Pengguna Aktif Harian (DAU).
-*   **Performance Optimization**: Caching, lazy loading, dan code splitting untuk load time optimal.
-*   **Autentikasi**: Implementasikan login/signup pengguna yang aman.
+### Production Readiness
+*   **Desain Database (ERD)**: Merancang skema yang dapat diskalakan untuk menangani profil pengguna, log riwayat, dan tren analisis
+*   **Arsitektur Skalabel**: Merancang ulang backend untuk mendukung 1000+ Pengguna Aktif Harian (DAU)
+*   **Performance Optimization**: Caching, lazy loading, dan code splitting untuk load time optimal
+*   **User Authentication**: Implementasi secure login/signup dengan session management
+*   **Data Persistence**: Integrasi database untuk menyimpan history analysis users
 
 ## Instruksi Instalasi
 
