@@ -212,8 +212,13 @@ export default function Dashboard() {
                         >
                             <div className="flex items-center justify-between mb-8">
                                 <div>
-                                    <h1 className="text-3xl font-bold">Analysis Report</h1>
+                                    <h1 className="text-3xl font-bold">Complete Analysis Report</h1>
                                     <p className="text-zinc-400">Detailed biometric breakdown</p>
+                                    {results.skin.overall && (
+                                        <p className="text-2xl font-bold text-pink-400 mt-2">
+                                            Overall Score: {results.skin.overall.score}/100
+                                        </p>
+                                    )}
                                 </div>
                                 <button
                                     onClick={() => setView(VIEWS.HISTORY)}
@@ -223,43 +228,138 @@ export default function Dashboard() {
                                 </button>
                             </div>
 
-                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                                <MetricCard
-                                    title="Acne Score"
-                                    score={results.skin.acne?.score || 0}
-                                    level={results.skin.acne?.level}
-                                    icon={Activity}
-                                    color="red"
-                                />
-                                <MetricCard
-                                    title="Wrinkles"
-                                    score={results.skin.wrinkles?.score || 0}
-                                    level={results.skin.wrinkles?.level}
-                                    icon={Activity}
-                                    color="yellow"
-                                />
-                                <MetricCard
-                                    title="Skin Texture"
-                                    score={results.skin.texture?.score || 0}
-                                    level={results.skin.texture?.level}
-                                    icon={Sun}
-                                    color="pink"
-                                />
-                                <MetricCard
-                                    title="Hydration"
-                                    score={results.skin.hydration?.score || 0}
-                                    level={results.skin.hydration?.level}
-                                    icon={Droplets}
-                                    color="blue"
-                                />
+                            {/* Primary Metrics */}
+                            <div className="mb-8">
+                                <h3 className="text-lg font-bold mb-4 text-zinc-300">📊 Primary Metrics</h3>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <MetricCard
+                                        title="Acne"
+                                        score={results.skin.acne?.score || 0}
+                                        level={results.skin.acne?.level}
+                                        icon={Activity}
+                                        color="red"
+                                    />
+                                    <MetricCard
+                                        title="Wrinkles"
+                                        score={results.skin.wrinkles?.score || 0}
+                                        level={results.skin.wrinkles?.level}
+                                        icon={Activity}
+                                        color="yellow"
+                                    />
+                                    <MetricCard
+                                        title="Texture"
+                                        score={results.skin.texture?.score || 0}
+                                        level={results.skin.texture?.level}
+                                        icon={Sun}
+                                        color="pink"
+                                    />
+                                    <MetricCard
+                                        title="Hydration"
+                                        score={results.skin.hydration?.score || 0}
+                                        level={results.skin.hydration?.level}
+                                        icon={Droplets}
+                                        color="blue"
+                                    />
+                                    <MetricCard
+                                        title="Pores"
+                                        score={results.skin.pore?.score || 0}
+                                        level={results.skin.pore?.level}
+                                        icon={Activity}
+                                        color="purple"
+                                    />
+                                    <MetricCard
+                                        title="Radiance"
+                                        score={results.skin.radiance?.score || 0}
+                                        level={results.skin.radiance?.level}
+                                        icon={Sun}
+                                        color="yellow"
+                                    />
+                                    <MetricCard
+                                        title="Firmness"
+                                        score={results.skin.firmness?.score || 0}
+                                        level={results.skin.firmness?.level}
+                                        icon={Activity}
+                                        color="green"
+                                    />
+                                    <MetricCard
+                                        title="Redness"
+                                        score={results.skin.redness?.score || 0}
+                                        level={results.skin.redness?.level}
+                                        icon={Activity}
+                                        color="red"
+                                    />
+                                </div>
                             </div>
 
+                            {/* Aging Signs */}
+                            <div className="mb-8">
+                                <h3 className="text-lg font-bold mb-4 text-zinc-300">👵 Aging Signs</h3>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <MetricCard
+                                        title="Age Spots"
+                                        score={results.skin.age_spot?.score || 0}
+                                        level={results.skin.age_spot?.level}
+                                        icon={Activity}
+                                        color="orange"
+                                    />
+                                    <MetricCard
+                                        title="Eye Bags"
+                                        score={results.skin.eye_bag?.score || 0}
+                                        level={results.skin.eye_bag?.level}
+                                        icon={Activity}
+                                        color="blue"
+                                    />
+                                    <MetricCard
+                                        title="Dark Circles"
+                                        score={results.skin.dark_circle?.score || 0}
+                                        level={results.skin.dark_circle?.level}
+                                        icon={Activity}
+                                        color="purple"
+                                    />
+                                    <MetricCard
+                                        title="Upper Eyelid"
+                                        score={results.skin.droopy_upper_eyelid?.score || 0}
+                                        level={results.skin.droopy_upper_eyelid?.level}
+                                        icon={Activity}
+                                        color="yellow"
+                                    />
+                                    <MetricCard
+                                        title="Lower Eyelid"
+                                        score={results.skin.droopy_lower_eyelid?.score || 0}
+                                        level={results.skin.droopy_lower_eyelid?.level}
+                                        icon={Activity}
+                                        color="yellow"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Skin Condition */}
+                            <div className="mb-8">
+                                <h3 className="text-lg font-bold mb-4 text-zinc-300">💧 Skin Condition</h3>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-4">
+                                    <MetricCard
+                                        title="Oiliness"
+                                        score={results.skin.oiliness?.score || 0}
+                                        level={results.skin.oiliness?.level}
+                                        icon={Droplets}
+                                        color="blue"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Face Attributes */}
                             <div className="glass-panel p-8 bg-white/5 border border-white/10 rounded-2xl">
                                 <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                                     <User className="w-5 h-5 text-pink-400" />
                                     Face Attributes
                                 </h3>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                    {results.skin.skin_age && (
+                                        <div>
+                                            <span className="text-zinc-500 text-sm">Skin Age</span>
+                                            <p className="text-2xl font-bold text-pink-400">{results.skin.skin_age.display}</p>
+                                        </div>
+                                    )}
                                     <div>
                                         <span className="text-zinc-500 text-sm">Estimated Age</span>
                                         <p className="text-2xl font-bold">{results.face.age?.value || "--"}</p>
@@ -267,10 +367,6 @@ export default function Dashboard() {
                                     <div>
                                         <span className="text-zinc-500 text-sm">Gender</span>
                                         <p className="text-2xl font-bold">{results.face.gender?.value || "--"}</p>
-                                    </div>
-                                    <div>
-                                        <span className="text-zinc-500 text-sm">Skin Quality</span>
-                                        <p className="text-2xl font-bold text-emerald-400">High</p>
                                     </div>
                                     <div>
                                         <span className="text-zinc-500 text-sm">Scan Date</span>

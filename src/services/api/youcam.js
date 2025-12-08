@@ -427,6 +427,42 @@ function transformYouCamResponse(apiResponse, isHD) {
             level: getLevel(data.hd_firmness?.ui_score || 0)
         };
 
+        // Additional HD metrics (matched to API documentation)
+        transformed.pore = {
+            score: data.hd_pore?.whole?.ui_score || data.hd_pore?.ui_score || 0,
+            level: getLevel(data.hd_pore?.whole?.ui_score || data.hd_pore?.ui_score || 0)
+        };
+
+        transformed.dark_circle = {
+            score: data.hd_dark_circle?.ui_score || 0,
+            level: getLevel(data.hd_dark_circle?.ui_score || 0)
+        };
+
+        transformed.redness = {
+            score: data.hd_redness?.ui_score || 0,
+            level: getLevel(data.hd_redness?.ui_score || 0)
+        };
+
+        transformed.oiliness = {
+            score: data.hd_oiliness?.ui_score || 0,
+            level: getLevel(data.hd_oiliness?.ui_score || 0)
+        };
+
+        transformed.age_spot = {
+            score: data.hd_age_spot?.ui_score || 0,
+            level: getLevel(data.hd_age_spot?.ui_score || 0)
+        };
+
+        transformed.droopy_upper_eyelid = {
+            score: data.hd_droopy_upper_eyelid?.ui_score || 0,
+            level: getLevel(data.hd_droopy_upper_eyelid?.ui_score || 0)
+        };
+
+        transformed.droopy_lower_eyelid = {
+            score: data.hd_droopy_lower_eyelid?.ui_score || 0,
+            level: getLevel(data.hd_droopy_lower_eyelid?.ui_score || 0)
+        };
+
     } else {
         // SD mode: Flat structure
         transformed.acne = {
@@ -463,6 +499,59 @@ function transformYouCamResponse(apiResponse, isHD) {
         transformed.firmness = {
             score: data.firmness?.ui_score || 0,
             level: getLevel(data.firmness?.ui_score || 0)
+        };
+
+        // Additional SD metrics (matched to API documentation)
+        transformed.pore = {
+            score: data.pore?.ui_score || 0,
+            level: getLevel(data.pore?.ui_score || 0)
+        };
+
+        // SD uses dark_circle_v2
+        transformed.dark_circle = {
+            score: data.dark_circle_v2?.ui_score || data.dark_circle?.ui_score || 0,
+            level: getLevel(data.dark_circle_v2?.ui_score || data.dark_circle?.ui_score || 0)
+        };
+
+        transformed.redness = {
+            score: data.redness?.ui_score || 0,
+            level: getLevel(data.redness?.ui_score || 0)
+        };
+
+        transformed.oiliness = {
+            score: data.oiliness?.ui_score || 0,
+            level: getLevel(data.oiliness?.ui_score || 0)
+        };
+
+        transformed.age_spot = {
+            score: data.age_spot?.ui_score || 0,
+            level: getLevel(data.age_spot?.ui_score || 0)
+        };
+
+        transformed.droopy_upper_eyelid = {
+            score: data.droopy_upper_eyelid?.ui_score || 0,
+            level: getLevel(data.droopy_upper_eyelid?.ui_score || 0)
+        };
+
+        transformed.droopy_lower_eyelid = {
+            score: data.droopy_lower_eyelid?.ui_score || 0,
+            level: getLevel(data.droopy_lower_eyelid?.ui_score || 0)
+        };
+    }
+
+    // Overall score (available in both modes)
+    if (data.all?.score !== undefined) {
+        transformed.overall = {
+            score: data.all.score || 0,
+            level: getLevel(data.all.score || 0)
+        };
+    }
+
+    // Skin Age (available in both modes)
+    if (data.skin_age !== undefined) {
+        transformed.skin_age = {
+            age: data.skin_age || 0,
+            display: data.skin_age ? `${data.skin_age} years` : "N/A"
         };
     }
 
