@@ -18,13 +18,22 @@ Demo ini bertujuan untuk menampilkan alur autentikasi biometrik yang mulus, menc
 *(Bagian ini disediakan untuk screenshot demo aplikasi. Silakan tambahkan gambar di bawah ini)*
 
 **1. Halaman Utama & Login**
-<!-- Tambahkan screenshot halaman login di sini -->
+<div align="center">
+  <img src="assets/landing-page.jpeg" width="45%" alt="Halaman Utama" />
+  <img src="assets/login-page.jpeg" width="45%" alt="Halaman Login" />
+</div>
 
 **2. Proses Pindai Wajah (Liveness Check)**
-<!-- Tambahkan screenshot proses scanning wajah di sini -->
+<div align="center">
+  <img src="assets/liveness-page.jpeg" width="45%" alt="Liveness Check" />
+  <img src="assets/analthyc-process-page.png" width="45%" alt="Proses Analisis" />
+</div>
 
 **3. Hasil Analisis & Dashboard**
-<!-- Tambahkan screenshot dashboard hasil di sini -->
+<div align="center">
+  <img src="assets/dashboard-page.png" width="45%" alt="Dashboard" />
+  <img src="assets/analysis-report-page.png" width="45%" alt="Laporan Analisis" />
+</div>
 
 ---
 
