@@ -47,18 +47,27 @@ Proyek ini berfungsi sebagai demonstrasi antarmuka pengguna premium untuk diagno
 
 ## Peta Jalan & Backlog
 
-### Fase 1: Proof of Concept (Selesai)
+### ✅ Fase 1: Proof of Concept (Selesai)
 *   [x] Implementasi UI/UX Dasar (Desain Mewah Klinis).
-*   [x] Mock Layanan Analisis Kulit.
+*   [x] **Real API Integration**: Integrasi YouCam API v2.0 untuk skin analysis.
+*   [x] **Face Detection Preview**: MediaPipe untuk validasi real-time sebelum capture.
+*   [x] **Complete Data Display**: Menampilkan 100% metrics dari API (15+ data points).
 *   [x] Login Biometrik (Deteksi & Bandingkan).
 *   [x] Pemeriksaan Liveness Variabel (Anti-spoofing).
 *   [x] Pembuatan Laporan PDF.
 *   [x] Sistem Pencatatan (Logging) Komprehensif.
 
-### Fase 2: Siap Produksi
+### 🚀 Fase 2: Enhancement Features (Backlog)
+*   [ ] **Lighting Detection** - Deteksi kondisi pencahayaan (terlalu gelap/terang) dengan warning real-time.
+*   [ ] **Face Centering Guide** - Overlay oval virtual untuk membantu posisi wajah optimal.
+*   [ ] **Optimal Distance Indicator** - Visual zone markers untuk jarak ideal dari kamera.
+*   [ ] **Screenshot Export** - Fitur save & download gambar diagnosis dengan overlays.
+*   [ ] **Progress History** - Track & compare skin scores over time dengan grafik trend.
+
+### 📊 Fase 3: Siap Produksi
 *   **Desain Database (ERD)**: Merancang skema yang dapat diskalakan untuk menangani profil pengguna, log riwayat, dan tren analisis.
 *   **Arsitektur Skalabel**: Merancang ulang backend untuk mendukung 1000 Pengguna Aktif Harian (DAU).
-*   **Transisi API Nyata**: Nonaktifkan layanan mock dan aktifkan kunci produksi untuk Layanan AI.
+*   **Performance Optimization**: Caching, lazy loading, dan code splitting untuk load time optimal.
 *   **Autentikasi**: Implementasikan login/signup pengguna yang aman.
 
 ## Instruksi Instalasi
