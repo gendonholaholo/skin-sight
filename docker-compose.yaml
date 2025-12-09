@@ -1,0 +1,18 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: analisis-wajah-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_PERFECT_CORP_API_KEY=${VITE_PERFECT_CORP_API_KEY}
+    env_file:
+      - .env
+    # Ensure network accessible host for Vite
+    command: npm run dev -- --host
