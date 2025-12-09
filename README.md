@@ -49,6 +49,8 @@ Berikut adalah bukti validasi implementasi feedback (Metric Renaming & Real-time
 > *   **Metric Renaming**: Metrik kulit kini menggunakan label positif (contoh: "Acne" menjadi "Clear Skin") untuk meningkatkan pemahaman pengguna.
 > *   **Real-time Status**: Menampilkan status analisis terperinci (mis: "Optimizing image...", "Uploading secure image...") untuk transparansi proses.
 
+> 📂 **Akses Aset Proyek**: Untuk melihat dokumentasi lengkap, video demo, dan aset desain resolusi tinggi, silakan kunjungi [Folder Google Drive Proyek](https://drive.google.com/drive/folders/1J42N0VNlSgB_jOQ6mPNpB_-adhDfnN81?usp=sharing).
+
 ---
 
 ## Roadmap & Backlog
