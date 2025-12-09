@@ -17,6 +17,7 @@ const VIEWS = {
 export default function Dashboard() {
     const [view, setView] = useState(VIEWS.HISTORY);
     const [results, setResults] = useState(null);
+    const [analysisStatus, setAnalysisStatus] = useState("Initializing...");
     const [history, setHistory] = useState(() => {
         const savedHistory = localStorage.getItem("user_scan_history");
         if (savedHistory) {
@@ -51,7 +52,7 @@ export default function Dashboard() {
             // Real parallel request simulation
             // In dev without keys, we might need robust fallbacks or mocks directly here if services fail
             const [skinData, faceData] = await Promise.all([
-                youCamService.analyzeSkin(base64Data),
+                youCamService.analyzeSkin(base64Data, setAnalysisStatus),
                 facePlusPlusService.detectFace(base64Data)
             ]);
 
@@ -198,7 +199,7 @@ export default function Dashboard() {
                                 <ScanFace className="w-24 h-24 text-pink-500 animate-pulse" />
                                 <div className="absolute inset-0 border-4 border-pink-500/30 rounded-full animate-ping" />
                             </div>
-                            <h2 className="text-2xl font-bold animate-pulse">Analyzing Skin Matrix...</h2>
+                            <h2 className="text-2xl font-bold animate-pulse text-center">{analysisStatus}</h2>
                             <p className="text-zinc-500 mt-2">Connecting to AI Neural Engine</p>
                         </motion.div>
                     )}
@@ -233,21 +234,21 @@ export default function Dashboard() {
                                 <h3 className="text-lg font-bold mb-4 text-zinc-300">Primary Metrics</h3>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     <MetricCard
-                                        title="Acne"
+                                        title="Clear Skin"
                                         score={results.skin.acne?.score || 0}
                                         level={results.skin.acne?.level}
                                         icon={Activity}
                                         color="red"
                                     />
                                     <MetricCard
-                                        title="Wrinkles"
+                                        title="Smoothness"
                                         score={results.skin.wrinkles?.score || 0}
                                         level={results.skin.wrinkles?.level}
                                         icon={Activity}
                                         color="yellow"
                                     />
                                     <MetricCard
-                                        title="Texture"
+                                        title="Texture Quality"
                                         score={results.skin.texture?.score || 0}
                                         level={results.skin.texture?.level}
                                         icon={Sun}
@@ -261,7 +262,7 @@ export default function Dashboard() {
                                         color="blue"
                                     />
                                     <MetricCard
-                                        title="Pores"
+                                        title="Pore Tightness"
                                         score={results.skin.pore?.score || 0}
                                         level={results.skin.pore?.level}
                                         icon={Activity}
@@ -282,7 +283,7 @@ export default function Dashboard() {
                                         color="green"
                                     />
                                     <MetricCard
-                                        title="Redness"
+                                        title="Even Tone"
                                         score={results.skin.redness?.score || 0}
                                         level={results.skin.redness?.level}
                                         icon={Activity}
@@ -296,35 +297,35 @@ export default function Dashboard() {
                                 <h3 className="text-lg font-bold mb-4 text-zinc-300">Aging Signs</h3>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     <MetricCard
-                                        title="Age Spots"
+                                        title="Spot Clarity"
                                         score={results.skin.age_spot?.score || 0}
                                         level={results.skin.age_spot?.level}
                                         icon={Activity}
                                         color="orange"
                                     />
                                     <MetricCard
-                                        title="Eye Bags"
+                                        title="Under-Eye Firmness"
                                         score={results.skin.eye_bag?.score || 0}
                                         level={results.skin.eye_bag?.level}
                                         icon={Activity}
                                         color="blue"
                                     />
                                     <MetricCard
-                                        title="Dark Circles"
+                                        title="Eye Brightness"
                                         score={results.skin.dark_circle?.score || 0}
                                         level={results.skin.dark_circle?.level}
                                         icon={Activity}
                                         color="purple"
                                     />
                                     <MetricCard
-                                        title="Upper Eyelid"
+                                        title="Upper Lid Firmness"
                                         score={results.skin.droopy_upper_eyelid?.score || 0}
                                         level={results.skin.droopy_upper_eyelid?.level}
                                         icon={Activity}
                                         color="yellow"
                                     />
                                     <MetricCard
-                                        title="Lower Eyelid"
+                                        title="Lower Lid Firmness"
                                         score={results.skin.droopy_lower_eyelid?.score || 0}
                                         level={results.skin.droopy_lower_eyelid?.level}
                                         icon={Activity}
@@ -338,7 +339,7 @@ export default function Dashboard() {
                                 <h3 className="text-lg font-bold mb-4 text-zinc-300">Skin Condition</h3>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-4">
                                     <MetricCard
-                                        title="Oiliness"
+                                        title="Oil Control"
                                         score={results.skin.oiliness?.score || 0}
                                         level={results.skin.oiliness?.level}
                                         icon={Droplets}

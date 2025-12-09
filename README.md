@@ -26,22 +26,28 @@ Proyek ini berfungsi sebagai demonstrasi antarmuka pengguna premium untuk diagno
 *   **Identity**: Biometric Recognition Service
 *   **Logging**: Custom Professional Logger Service
 
-## Hasil Pengujian & Demo
+## Hasil Pengujian & Demo (Updated: Feedback Implementation)
 
-*(Bagian ini disediakan untuk hasil pengujian dan demonstrasi aplikasi)*
+Berikut adalah bukti validasi implementasi feedback (Metric Renaming & Real-time Status):
 
-**🎥 Video Demo Lengkap**
-[Tonton Demo / Download Video di Google Drive](https://drive.google.com/drive/folders/1J42N0VNlSgB_jOQ6mPNpB_-adhDfnN81?usp=drive_link)
-
-### Tangkapan Layar Aplikasi
-| Halaman Utama & Login | Pindai Wajah & Liveness | Dashboard & Hasil |
+### 1. Alur Penggunaan (User Flow)
+| Landing Page | Halaman Login | Halaman Register |
 | :---: | :---: | :---: |
-| <img src="assets/landing-page.jpeg" width="100%" /><br><sub>Halaman Utama</sub><br><br><img src="assets/login-page.jpeg" width="100%" /><br><sub>Halaman Login</sub> | <img src="assets/liveness-page.jpeg" width="100%" /><br><sub>Liveness Check</sub><br><br><img src="assets/analthyc-process-page.png" width="100%" /><br><sub>Proses Analisis</sub> | <img src="assets/dashboard-page.png" width="100%" /><br><sub>Dashboard</sub><br><br><img src="assets/analysis-report-page.png" width="100%" /><br><sub>Laporan Analisis</sub> |
+| <img src="assets/update/landing-page.jpeg" width="100%" /> | <img src="assets/update/login-page.jpeg" width="100%" /> | <img src="assets/update/register-page.jpeg" width="100%" /> |
 
-### Validasi Liveness
-> **Status**: Aktif
-> **Metode**: Tantangan-Respon (Senyum / Putar Kepala)
-> **Tingkat Keberhasilan**: *(Akan diperbarui)*
+### 2. Validasi Selfie (Selfie Quality Check)
+| ❌ Terlalu Dekat | ❌ Terlalu Jauh | ✅ Tepat (Valid) |
+| :---: | :---: | :---: |
+| <img src="assets/update/take-selfie-terlalu-dekat.jpeg" width="100%" /> | <img src="assets/update/take-selfie-terlalujauh.jpeg" width="100%" /> | <img src="assets/update/take-selfie-tepat.jpeg" width="100%" /> |
+
+### 3. Proses & Hasil (Analysis & Metrics)
+| Login Failed | Register Terverifikasi | Proses Selfie | Hasil Analisis (Renamed Metrics) |
+| :---: | :---: | :---: | :---: |
+| <img src="assets/update/login-failed.jpeg" width="100%" /> | <img src="assets/update/register-terferifikasi.jpeg" width="100%" /> | <img src="assets/update/proses-take-selfie.jpeg" width="100%" /> | <img src="assets/update/hasil-analisis.jpeg" width="100%" /> |
+
+> **Catatan Pembaruan**:
+> *   **Metric Renaming**: Metrik kulit kini menggunakan label positif (contoh: "Acne" menjadi "Clear Skin") untuk meningkatkan pemahaman pengguna.
+> *   **Real-time Status**: Menampilkan status analisis terperinci (mis: "Optimizing image...", "Uploading secure image...") untuk transparansi proses.
 
 ---
 

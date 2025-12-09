@@ -93,7 +93,21 @@ export const youCamService = {
             // 2. Request Upload URL (V2 Endpoint for Skin Analysis)
             // Proxied via /api/perfectcorp
             // Matches user-provided documentation: POST /s2s/v2.0/file/skin-analysis
+            // 2. Request Upload URL (V2 Endpoint for Skin Analysis)
+            // Proxied via /api/perfectcorp
+            // Matches user-provided documentation: POST /s2s/v2.0/file/skin-analysis
             const UPLOAD_INIT_URL = "/api/perfectcorp/s2s/v2.0/file/skin-analysis";
+
+            console.log("🔑 YouCam API Key (First 5 chars):", API_KEY.substring(0, 5) + "...");
+            const payload = {
+                files: [{
+                    content_type: "image/jpg",
+                    file_name: "selfie.jpg",
+                    file_size: blob.size
+                }]
+            };
+
+            console.log("📤 Sending Upload Init Payload:", JSON.stringify(payload, null, 2));
 
             const initResponse = await fetch(UPLOAD_INIT_URL, {
                 method: "POST",
@@ -101,13 +115,7 @@ export const youCamService = {
                     "Authorization": `Bearer ${API_KEY}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    files: [{
-                        content_type: "image/jpeg",
-                        file_name: "selfie.jpg",
-                        file_size: blob.size
-                    }]
-                })
+                body: JSON.stringify(payload)
             });
 
             if (!initResponse.ok) {
@@ -166,7 +174,7 @@ export const youCamService = {
         }
     },
 
-    analyzeSkin: async (imageBase64) => {
+    analyzeSkin: async (imageBase64, onStatusUpdate = () => { }) => {
         if (!API_KEY) {
             console.warn("YouCam Credentials missing");
             throw new Error("Missing Credentials");
@@ -174,6 +182,7 @@ export const youCamService = {
 
         try {
             // Step 0: Detect image size and determine HD vs SD
+            onStatusUpdate("Analyzing image dimensions...");
             const img = await new Promise((resolve, reject) => {
                 const image = new Image();
                 image.onload = () => resolve(image);
@@ -197,12 +206,15 @@ export const youCamService = {
             console.log(`🎯 Selected mode: ${useHD ? 'HD' : 'SD'} Skincare`);
 
             // Resize image to meet API requirements
+            onStatusUpdate("Optimizing image for AI...");
             const resizedImage = await resizeImageForAPI(imageBase64, useHD);
 
             // Step 1: Upload Image
+            onStatusUpdate("Uploading secure image...");
             const fileId = await youCamService.uploadImage(resizedImage);
 
             // Step 2: Run Analysis Task (V2 Endpoint)
+            onStatusUpdate("Initiating dermatological analysis...");
             const API_URL = "/api/perfectcorp/s2s/v2.0/task/skin-analysis";
 
             // Auto-select features based on image quality
@@ -265,6 +277,7 @@ export const youCamService = {
             console.log("✅ Task ID obtained:", taskId);
 
             // Step 3: Poll for task completion
+            onStatusUpdate("Analyzing skin features...");
             const STATUS_URL = `/api/perfectcorp/s2s/v2.0/task/skin-analysis/${taskId}`;
             const MAX_ATTEMPTS = 30; // Max 60 seconds (30 * 2s)
             const POLL_INTERVAL = 2000; // 2 seconds
@@ -289,11 +302,12 @@ export const youCamService = {
 
                 console.log(`🔄 Poll attempt ${attempt + 1}/${MAX_ATTEMPTS}`);
                 console.log(`📊 Task ${taskId} status:`, status.task_status);
-                console.log(`📋 Full status response:`, JSON.stringify(statusData, null, 2));
+                onStatusUpdate(`Processing biometric data... (${Math.round((attempt / MAX_ATTEMPTS) * 100)}%)`);
 
                 if (status.task_status === "success") {
                     // Task completed successfully
                     console.log("✅ Analysis completed successfully!");
+                    onStatusUpdate("Finalizing report...");
                     console.log("📦 Raw API response:", JSON.stringify(status, null, 2));
 
                     // API returns ZIP file URL, not direct JSON scores
@@ -304,6 +318,7 @@ export const youCamService = {
                     }
 
                     console.log("📥 Downloading ZIP from:", zipUrl);
+                    onStatusUpdate("Downloading analysis results...");
 
                     // Download and extract ZIP file
                     const zipResponse = await fetch(zipUrl);
@@ -326,6 +341,7 @@ export const youCamService = {
                         throw new Error(`score_info.json not found in ZIP. Available files: ${Object.keys(zip.files).join(', ')}`);
                     }
 
+                    onStatusUpdate("Generating visualizations...");
                     const scoreInfoJson = await scoreInfoFile.async('string');
                     const scoreData = JSON.parse(scoreInfoJson);
 
