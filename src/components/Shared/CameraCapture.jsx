@@ -21,6 +21,7 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
     useEffect(() => {
         // Skip face detection entirely when in auto-capture mode (registration flow)
         if (autoCapture) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsInitializing(false);
             return;
         }
@@ -102,6 +103,7 @@ export default function CameraCapture({ onCapture, autoCapture = false }) {
     useEffect(() => {
         // Skip detector initialization in auto-capture mode (registration flow)
         if (autoCapture) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsInitializing(false);
             return;
         }

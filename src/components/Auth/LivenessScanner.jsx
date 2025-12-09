@@ -37,7 +37,7 @@ const CHALLENGES = [
     },
 ];
 
-export default function LivenessScanner({ onBack, onSuccess }) {
+export default function LivenessScanner({ onSuccess }) {
     const videoRef = useRef(null);
     const [status, setStatus] = useState(STATES.LOADING);
     const [message, setMessage] = useState("Initializing Camera...");
@@ -107,11 +107,8 @@ export default function LivenessScanner({ onBack, onSuccess }) {
                 });
                 streamRef.current = null;
             }
-            if (videoRef.current) {
-                videoRef.current.srcObject = null;
-            }
-            cancelAnimationFrame(requestRef.current);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const predictWebcam = async () => {
@@ -245,12 +242,7 @@ export default function LivenessScanner({ onBack, onSuccess }) {
         }
     };
 
-    const [tick, setTick] = useState(0); // Heartbeat for debug overlay
-
-    useEffect(() => {
-        const interval = setInterval(() => setTick(t => t + 1), 500);
-        return () => clearInterval(interval);
-    }, []);
+    // Tick removed
 
     return (
         <div className="relative w-full max-w-md mx-auto aspect-[3/4] bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl">

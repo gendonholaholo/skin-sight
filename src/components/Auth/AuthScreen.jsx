@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LivenessScanner from "./LivenessScanner";
 import CameraCapture from "../Shared/CameraCapture";
@@ -59,10 +59,10 @@ export default function AuthScreen() {
 
                 // Threshold for match (e.g., 80%)
                 if (data.confidence > 80) {
-                    setResult({ success: true, message: `Welcome back! Match: ${data.confidence.toFixed(1)}%` });
+                    setResult({ success: true, message: `Welcome back! Match: ${data.confidence.toFixed(1)}% ` });
                     setStep(4);
                 } else {
-                    throw new Error(`Identity mismatch. Confidence: ${data.confidence ? data.confidence.toFixed(1) : 0}%`);
+                    throw new Error(`Identity mismatch.Confidence: ${data.confidence ? data.confidence.toFixed(1) : 0}% `);
                 }
             }
         } catch (err) {
@@ -92,13 +92,13 @@ export default function AuthScreen() {
                     <div className="flex bg-white/5 p-1 rounded-full mb-8 backdrop-blur-md border border-white/10">
                         <button
                             onClick={() => handleSwitchMode("login")}
-                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold transition-all ${mode === "login" ? "bg-white text-black shadow-lg" : "text-zinc-400 hover:text-white"}`}
+                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold transition-all ${mode === "login" ? "bg-white text-black shadow-lg" : "text-zinc-400 hover:text-white"} `}
                         >
                             <LogIn className="w-4 h-4" /> Login
                         </button>
                         <button
                             onClick={() => handleSwitchMode("register")}
-                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold transition-all ${mode === "register" ? "bg-pink-600 text-white shadow-lg" : "text-zinc-400 hover:text-white"}`}
+                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full text-sm font-bold transition-all ${mode === "register" ? "bg-pink-600 text-white shadow-lg" : "text-zinc-400 hover:text-white"} `}
                         >
                             <UserPlus className="w-4 h-4" /> Register
                         </button>
@@ -131,7 +131,7 @@ export default function AuthScreen() {
                                 className={`w-full py-4 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2 ${mode === "register"
                                     ? "bg-gradient-to-r from-pink-600 to-indigo-600 shadow-pink-500/25"
                                     : "bg-white text-black hover:bg-zinc-200 shadow-white/10"
-                                    }`}
+                                    } `}
                             >
                                 {mode === "register" ? "Start Liveness Check" : "Start Face Scan"}
                             </motion.button>
@@ -201,7 +201,7 @@ export default function AuthScreen() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="bg-zinc-900/50 border border-white/10 rounded-3xl p-8 text-center backdrop-blur-xl"
                         >
-                            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${result.success ? "bg-emerald-500/20" : "bg-red-500/20"}`}>
+                            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${result.success ? "bg-emerald-500/20" : "bg-red-500/20"} `}>
                                 {result.success ? (
                                     <CheckCircle className="w-10 h-10 text-emerald-500" />
                                 ) : (
